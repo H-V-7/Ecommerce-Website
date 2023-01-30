@@ -1,10 +1,12 @@
 
-
+import Nav from "./Nav"
+import Banner from "./Banner"
 
 export default function Home(){
     return(
         <>
-            <h1>Home</h1>
+            <Nav />
+            <Banner />
         </>
     )
 }

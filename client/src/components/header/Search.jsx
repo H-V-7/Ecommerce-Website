@@ -1,4 +1,4 @@
-import { Box, colors, InputBase} from "@mui/material";
+import { Box,  InputBase} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from "@mui/system";
 import Menu from "./Menu"
@@ -10,7 +10,10 @@ const SearchBox = styled(Box)`
     align-items:center;
     padding:20px;
     width:35vw;
-
+    @media only screen and (max-width:786px){
+        padding:10px;
+        width:70vw;
+    }
     
 `
     
@@ -20,7 +23,9 @@ const SearchBar =styled(InputBase)`
     padding:5px;
     background: white;
     border-radius:5px;
-  
+    @media only screen and (max-width:786px){
+        width:100%;
+    }
 `
     
 

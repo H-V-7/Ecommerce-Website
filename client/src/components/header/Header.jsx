@@ -11,12 +11,17 @@ const Container = styled(Box)`
     margin-left:12%;
     display:flex;
     flex-direction:column;
-    
+    @media only screen and (max-width:786px){
+        margin-left:6%;
+    }
     
 `
 const SubHeading = styled(Typography)`
     font-size:15px;
     font-style:italic;
+    @media only screen and (max-width:786px){
+        font-size:10px;
+    }
 `
 
   
