@@ -28,9 +28,13 @@ export default function Menu(){
     function handleOnClick(){
         setOpenForm(true);
     }
+
     return(
     <MenuWrapper>
-        <LoginButton onClick={handleOnClick} variant="contained">Login</LoginButton>
+        
+            <LoginButton onClick={handleOnClick} variant="contained">Login</LoginButton>
+        
+       
         <Box sx={{display:"flex",alignItems:"center",gap:1}}>
             <ShoppingCartTwoToneIcon sx={{fontSize:30}}/>
             <Typography sx={{fontSize:25}}>Cart</Typography>

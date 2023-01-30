@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState,useContext} from "react";
 import {Box,Dialog,TextField, Button,Typography} from "@mui/material"
 import Face4TwoToneIcon from '@mui/icons-material/Face4TwoTone';
+
+import { DataContext } from "../../context/DataProvider";
+
 
 //importing api functions 
 import { handleSignUp } from "../../service/api";
@@ -37,7 +40,7 @@ const authPage = { //object for state toggle
 
     const[signUpData, setSignUpData] = useState({firstName:"", lastName:"",userName:"", emailId:"",phoneNumber:"",password:"",confirmPassword:"" });
 
-   
+    
     
     //function for onchange and saving form data in state
     function handelOnChange(event){ 
@@ -48,8 +51,18 @@ const authPage = { //object for state toggle
         })
     }
 
+    
+    
+
     async function signUp(){
         const response = await handleSignUp(signUpData);
+       console.log(response);
+       if(!response){
+        return
+       }
+       handleOnClose();
+       
+       
        
     }
     
