@@ -8,7 +8,18 @@ export async function handleSignUp(data){
     try{
         return await axios.post(`${URL}/signup`, data)
     }catch(error){
-        console.log("Error While Calling Api", error)
+        console.log("Error While SiginingIn. Please Try again", error)
+        return error.response
     }
     
 } 
+
+export async function handleLogin(data){
+    try{
+        return await axios.post(`${URL}/login`,data);
+    }
+    catch(error){
+        console.log("Error While Login. Please Try again",error)
+        return error.response
+    }
+}

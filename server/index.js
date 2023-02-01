@@ -9,7 +9,8 @@ import { deaultData } from "./default.js";
 import router from "./router/router.js"; 
 
 const app = express();
-app.use(express.json({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
 
 dotenv.config()
@@ -31,4 +32,3 @@ app.listen(3001,() => {
 
 await Connection(USERNAME,PASSWORD);
 
-deaultData();

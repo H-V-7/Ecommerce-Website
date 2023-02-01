@@ -2,16 +2,20 @@ import { useState,useContext} from "react";
 import {Box,Dialog,TextField, Button,Typography} from "@mui/material"
 import Face4TwoToneIcon from '@mui/icons-material/Face4TwoTone';
 
-import { DataContext } from "../../context/DataProvider";
+import {DataContext} from "../../context/DataProvider";
 
 
 //importing api functions 
-import { handleSignUp } from "../../service/api";
+import { handleSignUp,handleLogin } from "../../service/api";
 
 export default function LoginForm({openForm,setOpenForm}){
+
+    
+
     function handleOnClose(){
         setOpenForm(false);
         setPage(authPage.login);
+        setError(false);
     }
 
 const authPage = { //object for state toggle 
@@ -28,22 +32,25 @@ const authPage = { //object for state toggle
     const [page, setPage] = useState(authPage.login) //page toggle state
 
     function toggleSignUp(){
+        setError(false)
         setPage(authPage.signUp)
     }
     function toggleLogin(){
+        setError(false)
         setPage(authPage.login)
     }
 
 
     //states to save login and sign up page data on change in each input feilds
-    const[loginData, setLoiginData] = useState({email:"", password:""});
+    const[loginData, setLoginData] = useState({email:"", password:""});
 
     const[signUpData, setSignUpData] = useState({firstName:"", lastName:"",userName:"", emailId:"",phoneNumber:"",password:"",confirmPassword:"" });
 
+    const [error,setError] = useState("");
     
     
     //function for onchange and saving form data in state
-    function handelOnChange(event){ 
+    function handelOnChangeSignUp(event){ 
         setSignUpData(prevData => {
            return{...prevData,
                 [event.target.name]:event.target.value
@@ -51,20 +58,53 @@ const authPage = { //object for state toggle
         })
     }
 
-    
-    
+    function handelOnChangeLogin(event){ 
+        setLoginData(prevData => {
+           return{...prevData,
+                [event.target.name]:event.target.value
+           } 
+        })
+    }
+   
+
+    const [userName,setUserName] = useContext(DataContext);
+
+    async function login(){
+        let response = await handleLogin(loginData);
+        console.log(response)
+        if(!response) return;
+        if(response.status === 200){
+            setUserName(response.data.user.firstName) 
+            handleOnClose()
+        }
+        else{
+            setError(true)
+        }
+        
+        
+    }
+
 
     async function signUp(){
-        const response = await handleSignUp(signUpData);
-       console.log(response);
-       if(!response){
-        return
-       }
-       handleOnClose();
-       
-       
+        let response = await handleSignUp(signUpData);
+        console.log(response)
+       if(!response) return; //if there will be no response then this function will end here only
+       if(response.status === 200)
+        {
+            setUserName(response.data.newUser.firstName)
+            handleOnClose()
+        }
+        else if(response.status === 401){
+            setError(true)
+            
+        }
+        
+        
+      
        
     }
+   
+   
     
 
     return(<Dialog open={openForm} onClose={handleOnClose}>
@@ -73,22 +113,27 @@ const authPage = { //object for state toggle
                 <Typography>{page.Heading}</Typography>
                 <Face4TwoToneIcon sx={{height:100,width:100}}/>
             </Box>
-            {page.view === "login" ? <Box sx={{display:"flex",flexDirection:"column",gap:5,padding:2}}>
-                <TextField label="Email/Mobile Number" name="email" variant="outlined" />
-                <TextField label="Password"  name="password" variant="outlined" />
-                <Button variant="contained">Login</Button>
-                <Typography>OR</Typography>
-                <Button variant="contained">Request OTP</Button>
-                <Typography onClick={toggleSignUp}>New User? Create Account</Typography>
+            {page.view === "login" ? 
+            <Box sx={{display:"flex",flexDirection:"column",gap:2,padding:2}}>
+                
+                {error ? <Typography sx={{color:"red",fontSize:15}}>Please Check password and email ID</Typography> : ""}
+                <TextField label="Email Id" type="email" name="email" onChange={handelOnChangeLogin} variatnt="outlined" />
+                <TextField label="Password" type="password" onChange={handelOnChangeLogin} name="password" variant="outlined" />
+                <Button variant="contained" onClick={login}>Login</Button>
+                <Typography onClick= {toggleSignUp}>New User? Create Account</Typography>
             </Box>
-            :<Box sx={{display:"flex",flexDirection:"column",gap:0.35,padding:1}}>
-                <TextField label=" First Name" name="firstName" onChange={handelOnChange} variant="outlined" />
-                <TextField label="Last Name" name="lastName" onChange={handelOnChange} variant="outlined" />
-                <TextField label="User Name" name="userName" onChange={handelOnChange} variant="outlined" />
-                <TextField label="Email ID" name="emailId" onChange={handelOnChange} variant="outlined" />
-                <TextField label="Phone Number" name="phoneNumber" onChange={handelOnChange} variant="outlined" />
-                <TextField label="Password" name="password" onChange={handelOnChange} variant="outlined" />
-                <TextField label="Confirm Password" name="confirmPassword" onChange={handelOnChange} variant="outlined" />
+            :<Box sx={{display:"flex",flexDirection:"column",gap:2,padding:1}}>
+
+
+            
+                {error ? <Typography sx={{color:"red",fontSize:15}}>User Exist</Typography> : ""}
+                <TextField label=" First Name" name="firstName" onChange={handelOnChangeSignUp} variant="outlined" />
+                <TextField label="Last Name" name="lastName" onChange={handelOnChangeSignUp} variant="outlined" />
+                <TextField label="User Name" name="userName" onChange={handelOnChangeSignUp} variant="outlined" />
+                <TextField label="Email ID" name="emailId" onChange={handelOnChangeSignUp} variant="outlined" />
+                <TextField label="Phone Number" name="phoneNumber" onChange={handelOnChangeSignUp} variant="outlined" />
+                <TextField label="Password" type="password" name="password" onChange={handelOnChangeSignUp} variant="outlined" />
+                <TextField label="Confirm Password" type="password" name="confirmPassword" onChange={handelOnChangeSignUp} variant="outlined" />
                 <Button type="submit" variant="contained" onClick={signUp}>Sign Up</Button>
                 <Typography>OR</Typography>
                 <Typography onClick = {toggleLogin}>Already Have account ? Login</Typography>
