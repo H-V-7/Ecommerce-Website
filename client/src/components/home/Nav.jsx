@@ -9,7 +9,7 @@ const NavItems = styled("Box")`
   align-items:center;
   justify-content:center;
   img{
-    width:100%;
+    width:70%;
   }
   a{
     text-decoration:none;
@@ -18,7 +18,8 @@ const NavItems = styled("Box")`
  
    
 `
-const NavContainer = styled(NavItems)`
+const NavContainer = styled(NavItems)`  
+    
     display:flex;
     flex-direction:row;
     justify-content:space-evenly;
@@ -28,7 +29,7 @@ const NavContainer = styled(NavItems)`
 
 export default function Nav(){
     return(
-        <NavContainer>
+        <NavContainer sx={{backgroundColor:"white"}}>
             {navData.map((result,index) => (<NavItems key={index}><img src={result.url} alt={result.text}/><a href="home">{result.text}</a></NavItems>))}
         </NavContainer>
     )

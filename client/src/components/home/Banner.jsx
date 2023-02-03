@@ -27,9 +27,9 @@ export default function Banner(){
 
 
     return(
-        <Carousel  infinite={true} autoPlay={true} autoPlaySpeed={7000}  responsive={responsive} dotListClass="custom-dot-list-style"
+        <Carousel  infinite={true} autoPlay={true} autoPlaySpeed={7000}  swipeable={true} responsive={responsive} dotListClass="custom-dot-list-style"
         itemClass="carousel-item-padding-40-px" >
-            {bannerData.map((result) => (<Img src={result.url}/>))}
+            {bannerData.map((result,index) => (<Img key={index} src={result.url}/>))}
         </Carousel>
     )
 }

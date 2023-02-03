@@ -1,5 +1,5 @@
 import { useState,useContext} from "react";
-import {Box,Dialog,TextField, Button,Typography} from "@mui/material"
+import {Box,Dialog,TextField, Button,Typography, CircularProgress} from "@mui/material"
 import Face4TwoToneIcon from '@mui/icons-material/Face4TwoTone';
 
 import {DataContext} from "../../context/DataProvider";
@@ -67,6 +67,8 @@ const authPage = { //object for state toggle
     }
    
 
+    const [loading, setLoading] = useState(null)
+
     const [userName,setUserName] = useContext(DataContext);
 
     async function login(){
@@ -74,16 +76,21 @@ const authPage = { //object for state toggle
         console.log(response)
         if(!response) return;
         if(response.status === 200){
+            setLoading(false)
             setUserName(response.data.user.firstName) 
             handleOnClose()
         }
         else{
+            setLoading(false)
             setError(true)
         }
         
         
     }
 
+    function isLoading(){
+        setLoading(true);
+    }
 
     async function signUp(){
         let response = await handleSignUp(signUpData);
@@ -91,10 +98,12 @@ const authPage = { //object for state toggle
        if(!response) return; //if there will be no response then this function will end here only
        if(response.status === 200)
         {
+            setLoading(false)
             setUserName(response.data.newUser.firstName)
             handleOnClose()
         }
         else if(response.status === 401){
+            setLoading(false)
             setError(true)
             
         }
@@ -115,18 +124,21 @@ const authPage = { //object for state toggle
             </Box>
             {page.view === "login" ? 
             <Box sx={{display:"flex",flexDirection:"column",gap:2,padding:2}}>
-                
-                {error ? <Typography sx={{color:"red",fontSize:15}}>Please Check password and email ID</Typography> : ""}
+                {loading ? <CircularProgress />
+                    :
+                    <>{error ? <Typography sx={{color:"red",fontSize:15}}>Please Check password and email ID</Typography> : ""}
                 <TextField label="Email Id" type="email" name="email" onChange={handelOnChangeLogin} variatnt="outlined" />
                 <TextField label="Password" type="password" onChange={handelOnChangeLogin} name="password" variant="outlined" />
-                <Button variant="contained" onClick={login}>Login</Button>
+                <Button variant="contained" onClick={()=>{login();isLoading()}}>Login</Button>
                 <Typography onClick= {toggleSignUp}>New User? Create Account</Typography>
+                    </>
+                }
+                
             </Box>
             :<Box sx={{display:"flex",flexDirection:"column",gap:2,padding:1}}>
 
-
-            
-                {error ? <Typography sx={{color:"red",fontSize:15}}>User Exist</Typography> : ""}
+                {loading ? <CircularProgress /> 
+                : <>{error ? <Typography sx={{color:"red",fontSize:15}}>User Exist</Typography> : ""}
                 <TextField label=" First Name" name="firstName" onChange={handelOnChangeSignUp} variant="outlined" />
                 <TextField label="Last Name" name="lastName" onChange={handelOnChangeSignUp} variant="outlined" />
                 <TextField label="User Name" name="userName" onChange={handelOnChangeSignUp} variant="outlined" />
@@ -134,9 +146,12 @@ const authPage = { //object for state toggle
                 <TextField label="Phone Number" name="phoneNumber" onChange={handelOnChangeSignUp} variant="outlined" />
                 <TextField label="Password" type="password" name="password" onChange={handelOnChangeSignUp} variant="outlined" />
                 <TextField label="Confirm Password" type="password" name="confirmPassword" onChange={handelOnChangeSignUp} variant="outlined" />
-                <Button type="submit" variant="contained" onClick={signUp}>Sign Up</Button>
+                <Button type="submit" variant="contained" onClick={()=>{signUp();isLoading()}}>Sign Up</Button>
                 <Typography>OR</Typography>
-                <Typography onClick = {toggleLogin}>Already Have account ? Login</Typography>
+                <Typography onClick = {toggleLogin}>Already Have account ? Login</Typography></> 
+                }
+            
+               
             </Box>}
         </Box>
             </Dialog>)

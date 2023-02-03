@@ -2,7 +2,7 @@ import { products } from "./constants/data.js";
 import { Products } from "./schema/productSchema.js";
 
 
-export const deaultData = async() => {
+export const defaultData = async() => {
     try{
         await Products.deleteMany({});
         await Products.insertMany(products);

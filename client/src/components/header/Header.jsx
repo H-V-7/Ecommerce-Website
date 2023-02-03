@@ -2,10 +2,7 @@ import {AppBar,Toolbar,Box, Typography} from "@mui/material"
 import { styled } from "@mui/system";
 import StoreIcon from '@mui/icons-material/Store';
 import Search from "./Search";
-
-
-
-
+import { Link } from "react-router-dom"
 
 const Container = styled(Box)`
     margin-left:12%;
@@ -36,10 +33,13 @@ export default function Header() {
         <AppBar sx={{background:"#FED049",height:75}}>
             <Toolbar>
                 <Container>
-                    <StoreIcon sx={{color:"#FFF8E1",height:50,width:50}}/>
+                <Link to={"/"} style={{textDecoration:"none",color:"inherit"}}>
+                    <StoreIcon  sx={{color:"#FFF8E1",height:50,width:50}}/>
                     <SubHeading>Shop
                         <Box component="span">Online</Box>
                     </SubHeading>
+                </Link>
+                   
                 </Container>
             <Search />
             </Toolbar>
